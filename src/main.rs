@@ -23,6 +23,8 @@ struct AppState {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
+    dotenv().ok();
+
     init_database().await?;
 
     // Load GeoIP database
@@ -35,9 +37,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Configure API routes
     let app = Router::new()
         .route("/", get(root_handler))
-        .route("/me", get(me_handler))
         .route("/{ip}", get(ip_handler))
-        // .route("/database", post(db_handler)) // Manual DB update endpoint
+        // .route("/me", get(me_handler))           // TODO: Fetch own IP
+        // .route("/database", post(db_handler))    // TODO: Add CORS to this endpoint
         .with_state(state);
 
     // Schedule weekly automatic update
@@ -59,8 +61,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     sched.start().await?;
 
     // Start web server
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
-    log::info!("Server running on 0.0.0.0:3000");
+    let port = env::var("PORT")
+        .map(|p| p.parse().unwrap_or(1208))
+        .unwrap_or(1208);
+
+    let address = format!("0.0.0.0:{}", port);
+    let listener = tokio::net::TcpListener::bind(&address).await?;
+
+    println!("Server running on {}", address);
 
     // Handle concurrent server and scheduler shutdown
     tokio::select! {
@@ -76,13 +84,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 // Endpoint handlers
 async fn root_handler() -> &'static str {
-    "Hello, World!"
+    "GeoIP 🍡"
 }
 
 async fn me_handler(
     State(state): State<AppState>,
 ) -> Result<Json<Value>, (StatusCode, Json<Value>)> {
-    let ip = "127.0.0.1".parse().unwrap();
+    let ip = "127.0.0.1".parse().unwrap(); // TODO: Fetch own IP
     handle_ip_lookup(State(state), ip).await
 }
 
