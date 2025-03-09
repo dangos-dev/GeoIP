@@ -10,6 +10,8 @@
 .DS_Store
 desktop.ini
 
+/data
+
 ## Editor
 *.swp
 *.swo
@@ -26,6 +28,7 @@ Session.vim
 .settings/
 .vs/
 .dir-locals.el
+.env
 
 ## Tool
 .valgrindrc

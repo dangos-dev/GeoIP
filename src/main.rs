@@ -35,9 +35,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Configure API routes
     let app = Router::new()
         .route("/", get(root_handler))
+        .route("/me", get(me_handler))
         .route("/{ip}", get(ip_handler))
-        // .route("/me", get(me_handler))           // TODO: Fetch own IP
-        // .route("/database", post(db_handler))    // TODO: Add CORS to this endpoint
+        // .route("/database", post(db_handler)) // Manual DB update endpoint
         .with_state(state);
 
     // Schedule weekly automatic update
@@ -76,13 +76,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 // Endpoint handlers
 async fn root_handler() -> &'static str {
-    "GeoIP 🍡"
+    "Hello, World!"
 }
 
 async fn me_handler(
     State(state): State<AppState>,
 ) -> Result<Json<Value>, (StatusCode, Json<Value>)> {
-    let ip = "127.0.0.1".parse().unwrap(); // TODO: Fetch own IP
+    let ip = "127.0.0.1".parse().unwrap();
     handle_ip_lookup(State(state), ip).await
 }
 

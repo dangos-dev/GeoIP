@@ -1,10 +1,11 @@
 ﻿# Rust GeoIP Service
-
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
 
 A high-performance IP geolocation service powered by MaxMind's GeoLite2 database, built with Rust and Axum.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/y3QoLi?referralCode=Al2B-n)
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/xMaTor?referralCode=Al2B-n)
+
 
 ## Features
 
@@ -19,10 +20,13 @@ A high-performance IP geolocation service powered by MaxMind's GeoLite2 database
 
 1. Clone repository:
     ```bash
-    git clone https://github.com/dangos-dev/GeoIP.git
-    cd GeoIP
+    git clone https://github.com/yourusername/geoip-service.git
+    cd geoip-service
     ```
-2. Create .env file.
+2. Create .env file:
+    ```bash
+    cp .env.example .env
+    ```
 
 3. Build and run:
     ```bash
@@ -31,29 +35,23 @@ A high-performance IP geolocation service powered by MaxMind's GeoLite2 database
     ```
 
 ## Configuration
-
 Required environment variables:
-
 - `ACCOUNT_ID`: MaxMind account ID
 - `LICENSE_KEY`: MaxMind license key
 
 ## API Endpoints
-
 - `GET /`: Service status check
+- `GET /me`: Lookup your own IP
 - `GET /{ip}`: Lookup any IPv4/IPv6 address
-- `GET /me`: Lookup your own IP (TODO)
-- `POST /database`: Trigger manual database update (TODO)
+- `POST /database`: Trigger manual database update (disabled on this repo)
 
 ## Scheduled Updates
-
 Automatic weekly updates occur every Sunday at 00:00 UTC. Manual updates can be triggered via the API.
 
 ## License
-
 MIT License
 
 ### Acknowledgements
-
 - MaxMind GeoLite2 Database
 - Axum Web Framework
 - Tokio Runtime
